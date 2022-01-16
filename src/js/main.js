@@ -23,7 +23,7 @@ const generateCards = (repo) => {
       </span>
     </a>
     ${repo.homepageUrl
-      ? `<a href="${repo.homepageUrl}"><i class="fas fa-external-link-alt"></i></a>`
+      ? `<a href="${repo.homepageUrl}"><i class="icon-link-ext-alt"></i></a>`
       : ''
     }
 
