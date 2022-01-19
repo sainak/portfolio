@@ -26,41 +26,59 @@ let response = fetchRepos(JSON.stringify(requestBody));
 const generateCards = (repo) => {
   const [owner, name] = repo.nameWithOwner.split("/");
 
-  const languagePills = repo.languages.edges.map((language) => {
-    return `<span class="pill" style="background-color:${language.node.color}60">${language.node.name}</span>`;
+  const repoUrl = `https://github.com/${owner}/${name}`;
+
+  const languagesTotal = repo.languages.totalSize;
+
+  //sort repo.languages.edges based on language.size
+  const sortedLanguages = repo.languages.edges.sort((a, b) => b.size - a.size);
+
+  const languageBar = sortedLanguages.map((language) => {
+    const width = (language.size / languagesTotal) * 100;
+    return `
+    <a style="background-color:${language.node.color} !important;;width: ${width}%"
+      href="${repoUrl}/search?l=${language.node.name}" ></a>
+    `;
   });
 
   const topicsPills = repo.repositoryTopics.nodes.map((topic) => {
-    return `<span class="pill">${topic.topic.name}</span>`;
+    const topicName = topic.topic.name;
+    return `
+      <a href="https://github.com/search?q=user%3A${owner}+${topicName}" class="pill">
+        ${topicName}
+      </a>
+    `;
   });
 
   let card = document.createElement("div");
   card.classList.add("p-4", "xl:w-1/4", "md:w-1/2", "sm:w-1/2", "w-full");
   card.innerHTML = `
-  <div class="repo-card">
-    <a href="https://github.com/${owner}/${name}">
-      <span class="text-xl">
-        ${owner}/<span class="font font-bold">${name}</span>
-      </span>
-    </a>
-    ${
-      repo.homepageUrl
-        ? `<a href="${repo.homepageUrl}"><i class="icon-link-ext-alt"></i></a>`
-        : ""
-    }
-
-    ${repo.description ? `<p>${repo.description}</p>` : ""}
-
-    <div class="flex flex-wrap mt-2 gap-2">
-      ${languagePills.join("\n")}
+  <div class="rounded-lg bg-white">
+    <div class="flex rounded-t-lg overflow-hidden h-2 mb-8">
+      ${languageBar.join("\n")}
     </div>
-    ${
-      repo.repositoryTopics.nodes.length > 0
-        ? `<div class="flex flex-wrap mt-2 gap-2">
-          ${topicsPills.join("\n")}
-        </div>`
-        : ""
-    }
+    <div class="px-4 pb-6">
+      <a href="${repoUrl}">
+        <span class="text-xl">
+          ${owner}/<span class="font font-bold">${name}</span>
+        </span>
+      </a>
+      ${
+        repo.homepageUrl
+          ? `<a href="${repo.homepageUrl}"><i class="icon-link-ext-alt"></i></a>`
+          : ""
+      }
+
+      ${repo.description ? `<p>${repo.description}</p>` : ""}
+
+      ${
+        repo.repositoryTopics.nodes.length > 0
+          ? `<div class="flex flex-wrap mt-2 gap-2">
+            ${topicsPills.join("\n")}
+          </div>`
+          : ""
+      }
+    </div>
   </div>`;
 
   return card;
