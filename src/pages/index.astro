@@ -1,0 +1,16 @@
+---
+import PortfolioLayout from "../layouts/PortfolioLayout.astro"
+import HeroSection  from "../components/HeroSection.astro"
+import ProjectSection from "../components/ProjectSection.astro"
+import FooterSection from "../components/FooterSection.astro";
+
+Astro.response.headers.set('Cache-Control', 'public, max-age=10800, s-maxage=21600');
+---
+
+<PortfolioLayout title="Aakash Singh">
+  <main class="h-full">
+    <HeroSection/>
+    <ProjectSection />
+    <FooterSection />
+  </main>
+</PortfolioLayout>

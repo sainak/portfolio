@@ -1,0 +1,33 @@
+---
+import Icon from "./Icon.astro"
+
+export const prerender = true
+---
+
+<section id="footer" class="h-min w-full bg-gray-700">
+  <div class="sm:mx-auto max-w-5xl flex items-end">
+    <div class="sm:ml-auto w-min py-6 px-6">
+      <p class="w-max text-md font-bold my-2">Find me on,</p>
+      <div class="flex w-max gap-3">
+        <a href="mailto:Aakash Singh <mail@singhaakash.dev>?body=Hi Aakash,">
+          <Icon name="gmail" class="w-10 h-10" />
+        </a>
+        <a href="https://github.com/sainak">
+          <Icon name="github" class="w-10 h-10" />
+        </a>
+        <a href="https://www.linkedin.com/in/aakashdsingh/">
+          <Icon name="linkedin" class="w-10 h-10" />
+        </a>
+        <a href="https://twitter.com/singhaakash28">
+          <Icon name="twitter" class="w-10 h-10" />
+        </a>
+        <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ">
+          <Icon name="youtube" class="w-10 h-10" />
+        </a>
+      </div>
+    </div>
+  </div>
+  <p class="text-sm sm:text-md mt-2 py-2 bg-gray-600 w-full text-center">
+    This site is best viewed on Inernet Explorer 12 or higher.
+  </p>
+</section>

@@ -1,0 +1,51 @@
+---
+import Icon from "./Icon.astro"
+import { FloatySpaceCanvas } from "./FloatySpaceCanvas"
+
+export const prerender = true
+---
+
+<section
+  id="hero"
+  class="relative h-screen w-full flex items-center justify-center bg-gray-900"
+>
+  <FloatySpaceCanvas
+    className="absolute left-0 h-full w-full"
+    client:only="preact"
+  />
+  <div class="absolute z-10 sm:mb-20 md:mb-32 flex flex-col items-center justify-center">
+    <div class="text-lg sm:text-3xl lg:text-5xl">
+      Hi, I'm <span class="text-sky-500">Aakash Singh</span>,
+      <br />
+      a full-stack web developer.
+      <!-- <br />
+      with experience in 
+      <br/>
+      <span class="text-green-700">Django</span>, <span class="text-yellow-500">React</span> and <span class="text-sky-500">GO</span>. -->
+    </div>
+    <div class="mt-2 w-full px-1 md:mt-4">
+      <a
+        id="projects-link"
+        class="group block w-full px-5 py-2 text-center outline outline-white backdrop-blur-sm md:text-lg lg:text-2xl transition-all duration-300 hover:bg-white hover:text-gray-900"
+        href="#projects"
+      >
+        Things i've built
+        <Icon
+          name="arrow-right"
+          class="ml-2 mb-1 inline h-6 w-6 transition duration-300 group-hover:rotate-90 ease-out"
+        />
+      </a>
+    </div>
+  </div>
+</section>
+
+<script>
+  document.getElementById("projects-link")?.addEventListener("click", (e) => {
+    e.preventDefault()
+
+    document.getElementById("projects")?.scrollIntoView({
+      behavior: "smooth",
+
+    })
+  })
+</script>

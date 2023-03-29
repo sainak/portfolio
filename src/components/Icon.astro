@@ -1,0 +1,20 @@
+---
+import { iconPaths } from "./IconPaths"
+
+export interface Props {
+  name: keyof typeof iconPaths
+  class?: string
+}
+
+const { name, class: className = "w-5 h-5" } = Astro.props as Props
+const iconPath = iconPaths[name]
+---
+
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 24 24"
+  aria-hidden="true"
+  class={className}
+>
+  <g set:html={iconPath} />
+</svg>
