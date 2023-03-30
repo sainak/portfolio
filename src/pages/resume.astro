@@ -1,7 +1,7 @@
 ---
 // export const prerender = true
 
-let response =  Astro.redirect("/resume.pdf", 301)
+let response = Astro.redirect("/resume.pdf", 301)
 response.headers.set("Cache-Control", "public, max-age=6048000, immutable")
 
 return response

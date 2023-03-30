@@ -19,9 +19,9 @@ const languagesTotal = repo.languages.totalSize
         .map((language) => {
           return (
             <a
-              style={`background-color:${
-                language.node.color
-              } !important;;width: ${(language.size / languagesTotal) * 100}%`}
+              style={`background-color:${language.node.color} !important;;width: ${
+                (language.size / languagesTotal) * 100
+              }%`}
               href={`${repoUrl}/search?l=${language.node.name}`}
               target="_blank"
             />
@@ -45,12 +45,12 @@ const languagesTotal = repo.languages.totalSize
     {repo.description && <p class="mt-2">{repo.description}</p>}
     {
       repo.repositoryTopics.nodes.length > 0 && (
-        <div class="flex flex-wrap mt-2 gap-2">
+        <div class="mt-2 flex flex-wrap gap-2">
           {repo.repositoryTopics.nodes.map((topic) => {
             return (
               <a
                 href={`https://github.com/search?q=user%3A${repo.owner.login}+${topic.topic.name}`}
-                class="px-3 rounded-full border border-gray-300 text-sm w-max cursor-pointer active:bg-gray-300 transform transition duration-300 ease-in-out"
+                class="w-max transform cursor-pointer rounded-full border border-gray-300 px-3 text-sm transition duration-300 ease-in-out active:bg-gray-300"
                 target="_blank"
               >
                 {topic.topic.name}
