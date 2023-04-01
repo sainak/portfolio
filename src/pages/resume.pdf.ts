@@ -7,6 +7,11 @@ export const get: APIRoute = async function get() {
 
     return response
   } catch (error: unknown) {
-    throw new Error(`Something went wrong!: ${error as string}`)
+    console.error(error)
+
+    return {
+      status: 500,
+      body: "Internal Server Error",
+    }
   }
 }

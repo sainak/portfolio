@@ -11,7 +11,7 @@
 import { useCallback, useEffect, useRef } from "preact/hooks"
 import { useObserver } from "preact-intersection-observer"
 import { CanvasSpace, Bound, CanvasForm, Group, Create, Pt, Line, Polygon } from "pts"
-import { getRandomNumber } from "../utils/helpers"
+import { getRandomNumber } from "@utils/primitives"
 
 interface MyPt extends Pt {
   opacity?: number
@@ -19,7 +19,7 @@ interface MyPt extends Pt {
 }
 let colors = ["#FF3F8E", "#04C2C9", "#2E55C1"]
 
-export const FloatySpaceCanvas = ({ className = "" }) => {
+const FloatySpaceCanvas = ({ className = "" }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const spaceRef = useRef<CanvasSpace>()
   const points = useRef<Group>()
@@ -62,7 +62,7 @@ export const FloatySpaceCanvas = ({ className = "" }) => {
         }
       })()
     },
-    []
+    [points]
   )
 
   const perpend = useCallback(
@@ -107,7 +107,7 @@ export const FloatySpaceCanvas = ({ className = "" }) => {
         }
       })
     },
-    []
+    [points]
   )
 
   useEffect(() => {
@@ -127,7 +127,7 @@ export const FloatySpaceCanvas = ({ className = "" }) => {
     return () => {
       spaceRef.current && spaceRef.current.dispose()
     }
-  }, [])
+  }, [canvasRef])
 
   /**
    * Play or stop based on play prop
@@ -156,3 +156,5 @@ export const FloatySpaceCanvas = ({ className = "" }) => {
     </div>
   )
 }
+
+export default FloatySpaceCanvas

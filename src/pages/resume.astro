@@ -1,6 +1,4 @@
 ---
-// export const prerender = true
-
 let response = Astro.redirect("/resume.pdf", 301)
 response.headers.set("Cache-Control", "public, max-age=604800, immutable")
 response.headers.set("X-Robots-Tag", "noindex, nofollow")
