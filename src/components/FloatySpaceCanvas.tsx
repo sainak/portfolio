@@ -29,7 +29,7 @@ const FloatySpaceCanvas = ({ className = "" }) => {
     threshold: 0.2,
   })
 
-  const speed = 0.0014
+  const rotateAngle = 0.0014
   const triggerDistance = 50
   const ptSize = 1.5
   const ptSizeMax = 6
@@ -49,7 +49,7 @@ const FloatySpaceCanvas = ({ className = "" }) => {
 
       base_line.current = (() => {
         // set orientation
-        switch (getRandomNumber(0, 4) | 0) {
+        switch (getRandomNumber(0, 4)) {
           case 1:
             // top right
             return new Group(new Pt(space.size.x, 0), new Pt(0, -space.width * 0.5))
@@ -73,38 +73,34 @@ const FloatySpaceCanvas = ({ className = "" }) => {
   )
 
   const handleAnimate = useCallback(
-    (space: CanvasSpace, form: CanvasForm, time: number, ftime: number) => {
-      points.current!.rotate2D(speed, space.center)
+    (space: CanvasSpace, form: CanvasForm) => {
+      points.current!.rotate2D(rotateAngle, space.center)
 
       points.current!.forEach((pt: MyPt, i) => {
-        try {
-          const lp = perpend(pt)
+        const lp = perpend(pt)
 
-          const distLineToMouse = Line.perpendicularFromPt([pt, lp], space.pointer)
-            .$subtract(space.pointer)
-            .magnitude()
+        const distLineToMouse = Line.perpendicularFromPt([pt, lp], space.pointer)
+          .$subtract(space.pointer)
+          .magnitude()
 
-          if (distLineToMouse < triggerDistance) {
-            if (pt.opacity! < ptOpacityMax) pt.opacity! += 0.02
-          } else {
-            if (pt.opacity! > ptOpacity) pt.opacity! -= 0.01
-          }
-
-          const distPointToMouse = pt.$subtract(space.pointer).magnitude()
-          if (distPointToMouse < triggerDistance) {
-            if (pt.size! < ptSizeMax) pt.size! += 0.5
-          } else {
-            if (pt.size! > ptSize) pt.size! -= 0.05
-          }
-
-          form.stroke(`rgba(255,255,255,${pt.opacity}`).line([pt, lp])
-          // form.fillOnly(colors[i % 3]).point(pt, pt.size /* pt.size */, "circle")
-          form
-            .fillOnly(colors[i % 3])
-            .polygon(Polygon.fromCenter(pt, pt.size!, Math.max(3, i % 6)))
-        } catch (e) {
-          console.error(e)
+        if (distLineToMouse < triggerDistance) {
+          if (pt.opacity! < ptOpacityMax) pt.opacity! += 0.02
+        } else {
+          if (pt.opacity! > ptOpacity) pt.opacity! -= 0.01
         }
+
+        const distPointToMouse = pt.$subtract(space.pointer).magnitude()
+        if (distPointToMouse < triggerDistance) {
+          if (pt.size! < ptSizeMax) pt.size! += 0.5
+        } else {
+          if (pt.size! > ptSize) pt.size! -= 0.05
+        }
+
+        form.stroke(`rgba(255,255,255,${pt.opacity}`).line([pt, lp])
+        // form.fillOnly(colors[i % 3]).point(pt, pt.size /* pt.size */, "circle")
+        form
+          .fillOnly(colors[i % 3])
+          .polygon(Polygon.fromCenter(pt, pt.size!, Math.max(3, i % 6)))
       })
     },
     [points]
@@ -120,7 +116,7 @@ const FloatySpaceCanvas = ({ className = "" }) => {
     let form = spaceRef.current.getForm()
     spaceRef.current.add({
       start: (bound: Bound) => handleStart(bound, spaceRef.current!, form),
-      animate: (time, ftime) => handleAnimate(spaceRef.current!, form, time!, ftime!),
+      animate: () => handleAnimate(spaceRef.current!, form),
     })
     spaceRef.current.bindMouse()
 
