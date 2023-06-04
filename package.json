@@ -8,18 +8,18 @@
     "format": "prettier --write './src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}' --plugin=prettier-plugin-tailwindcss --plugin=prettier-plugin-astro"
   },
   "dependencies": {
-    "@astrojs/preact": "^2.2.0",
+    "@astrojs/preact": "^2.2.1",
     "@astrojs/tailwind": "^3.1.3",
-    "@astrojs/vercel": "^3.4.0",
-    "astro": "^2.5.2",
-    "preact": "^10.15.0",
+    "@astrojs/vercel": "^3.4.1",
+    "astro": "^2.5.7",
+    "preact": "^10.15.1",
     "preact-intersection-observer": "^2.3.6",
     "pts": "^0.11.3",
     "tailwindcss": "^3.3.2"
   },
   "devDependencies": {
     "prettier": "^2.8.8",
-    "prettier-plugin-astro": "^0.9.0",
+    "prettier-plugin-astro": "^0.10.0",
     "prettier-plugin-tailwindcss": "^0.3.0"
   }
 }
