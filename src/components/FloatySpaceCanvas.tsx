@@ -83,17 +83,17 @@ const FloatySpaceCanvas = ({ className = "" }) => {
           .$subtract(space.pointer)
           .magnitude()
 
-        if (distLineToMouse < triggerDistance) {
-          if (pt.opacity! < ptOpacityMax) pt.opacity! += 0.02
-        } else {
-          if (pt.opacity! > ptOpacity) pt.opacity! -= 0.01
+        if (distLineToMouse < triggerDistance && pt.opacity! < ptOpacityMax) {
+          pt.opacity! += 0.02
+        } else if (pt.opacity! > ptOpacity) {
+          pt.opacity! -= 0.01
         }
 
         const distPointToMouse = pt.$subtract(space.pointer).magnitude()
-        if (distPointToMouse < triggerDistance) {
-          if (pt.size! < ptSizeMax) pt.size! += 0.5
-        } else {
-          if (pt.size! > ptSize) pt.size! -= 0.05
+        if (distPointToMouse < triggerDistance && pt.size! < ptSizeMax) {
+          pt.size! += 0.5
+        } else if (pt.size! > ptSize) {
+          pt.size! -= 0.05
         }
 
         form.stroke(`rgba(255,255,255,${pt.opacity}`).line([pt, lp])
@@ -107,7 +107,9 @@ const FloatySpaceCanvas = ({ className = "" }) => {
   )
 
   useEffect(() => {
-    if (!canvasRef || !canvasRef.current) return
+    if (!canvasRef || !canvasRef.current) {
+      return
+    }
     spaceRef.current = new CanvasSpace(canvasRef.current).setup({
       bgcolor: "#111827",
       resize: true,
@@ -130,7 +132,9 @@ const FloatySpaceCanvas = ({ className = "" }) => {
    * */
   const maybePlay = () => {
     const space = spaceRef.current
-    if (!space) return
+    if (!space) {
+      return
+    }
     if (inView) {
       if (space.isPlaying) {
         space.resume()
