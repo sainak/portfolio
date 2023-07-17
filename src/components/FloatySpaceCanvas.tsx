@@ -96,7 +96,7 @@ const FloatySpaceCanvas = ({ className = "" }) => {
           pt.size! -= 0.05
         }
 
-        form.strokeOnly(`rgba(255,255,255,${pt.opacity}`).line([pt, lp])
+        form.strokeOnly(`rgb(255 255 255 / ${pt.opacity}`).line([pt, lp])
         // form.fillOnly(colors[i % 3]).point(pt, pt.size /* pt.size */, "circle")
         form
           .fillOnly(colors[i % 3])
