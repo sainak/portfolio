@@ -23,6 +23,7 @@ const FloatySpaceCanvas = ({ className = "" }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const spaceRef = useRef<CanvasSpace>()
   const points = useRef<Group>()
+  const orientation = useRef(getRandomNumber(0, 4))
   const base_line = useRef<Group>()
   const [containerRef, inView] = useObserver<HTMLDivElement>({
     defaultInView: true,
@@ -30,46 +31,50 @@ const FloatySpaceCanvas = ({ className = "" }) => {
   })
 
   const rotateAngle = 0.0014
-  const triggerDistance = 50
+  const triggerDistance = 55
   const ptSize = 1.5
-  const ptSizeMax = 6
+  const ptSizeMax = 8
   const ptOpacity = 0.1
   const ptOpacityMax = 0.3
+
+  const setBaseLine = useCallback((space: CanvasSpace) => {
+    base_line.current = (() => {
+      // set orientation
+      switch (orientation.current) {
+        case 1:
+          // top right
+          return new Group(new Pt(space.size.x, 0), new Pt(0, -space.width * 0.5))
+        case 2:
+          // top center
+          return new Group(new Pt(), new Pt(space.size.x, 0))
+        default:
+          // top left
+          return new Group(new Pt(), new Pt(space.size.x, -space.width * 0.5))
+      }
+    })()
+  }, [])
 
   const handleStart = useCallback(
     (bound: Bound, space: CanvasSpace, form: CanvasForm) => {
       points.current = Create.distributeRandom(
         space.innerBound,
-        Math.min((window.innerWidth * 0.05) | 0, 150)
+        Math.min((window.innerWidth * 0.05) | 0, 120),
       )
       points.current.forEach((pt: MyPt) => {
         pt.opacity = ptOpacity
         pt.size = ptSize
       })
 
-      base_line.current = (() => {
-        // set orientation
-        switch (getRandomNumber(0, 4)) {
-          case 1:
-            // top right
-            return new Group(new Pt(space.size.x, 0), new Pt(0, -space.width * 0.5))
-          case 2:
-            // top center
-            return new Group(new Pt(), new Pt(space.size.x, 0))
-          default:
-            // top left
-            return new Group(new Pt(), new Pt(space.size.x, -space.width * 0.5))
-        }
-      })()
+      setBaseLine(space)
     },
-    [points]
+    [points],
   )
 
   const perpend = useCallback(
     (pt: MyPt) => {
       return base_line.current!.op(Line.perpendicularFromPt)(pt)
     },
-    [base_line]
+    [base_line],
   )
 
   const handleAnimate = useCallback(
@@ -103,7 +108,7 @@ const FloatySpaceCanvas = ({ className = "" }) => {
           .polygon(Polygon.fromCenter(pt, pt.size!, Math.max(3, i % 6)))
       })
     },
-    [points]
+    [points],
   )
 
   useEffect(() => {
@@ -119,6 +124,7 @@ const FloatySpaceCanvas = ({ className = "" }) => {
     spaceRef.current.add({
       start: (bound: Bound) => handleStart(bound, spaceRef.current!, form),
       animate: () => handleAnimate(spaceRef.current!, form),
+      resize: () => setBaseLine(spaceRef.current!),
     })
     spaceRef.current.bindMouse()
 
