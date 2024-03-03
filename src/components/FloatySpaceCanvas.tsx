@@ -58,7 +58,7 @@ const FloatySpaceCanvas = ({ className = "" }) => {
     (bound: Bound, space: CanvasSpace, form: CanvasForm) => {
       points.current = Create.distributeRandom(
         space.innerBound,
-        Math.min((window.innerWidth * 0.05) | 0, 120),
+        Math.min((window.innerWidth * 0.07) | 0, 150),
       )
       points.current.forEach((pt: MyPt) => {
         pt.opacity = ptOpacity
