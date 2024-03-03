@@ -8,6 +8,11 @@ export default defineConfig({
   output: "server",
   integrations: [preact(), tailwind()],
   adapter: vercel({
-    analytics: true,
+    isr: {
+      expiration: 60 * 60 * 1,
+    },
+    webAnalytics: {
+      enabled: true,
+    },
   }),
 })
