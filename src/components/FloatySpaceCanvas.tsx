@@ -17,7 +17,7 @@ interface MyPt extends Pt {
   opacity?: number
   size?: number
 }
-let colors = ["#FF3F8E", "#04C2C9", "#2E55C1"]
+let colors = ["#FF3F8E", "#04C2C9", "#2E55C1", "#FFA400"]
 
 const FloatySpaceCanvas = ({ className = "" }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null)
@@ -31,11 +31,11 @@ const FloatySpaceCanvas = ({ className = "" }) => {
   })
 
   const rotateAngle = 0.0014
-  const triggerDistance = 55
+  const triggerDistance = 50
   const ptSize = 1.5
-  const ptSizeMax = 8
-  const ptOpacity = 0.1
-  const ptOpacityMax = 0.3
+  const ptSizeMax = 9
+  const ptOpacity = 0.07
+  const ptOpacityMax = 0.25
 
   const setBaseLine = useCallback((space: CanvasSpace) => {
     base_line.current = (() => {
@@ -96,15 +96,15 @@ const FloatySpaceCanvas = ({ className = "" }) => {
 
         const distPointToMouse = pt.$subtract(space.pointer).magnitude()
         if (distPointToMouse < triggerDistance && pt.size! < ptSizeMax) {
-          pt.size! += 0.5
+          pt.size! += 0.25
         } else if (pt.size! > ptSize) {
-          pt.size! -= 0.05
+          pt.size! -= 0.1
         }
 
         form.strokeOnly(`rgb(255 255 255 / ${pt.opacity}`).line([pt, lp])
         // form.fillOnly(colors[i % 3]).point(pt, pt.size /* pt.size */, "circle")
         form
-          .fillOnly(colors[i % 3])
+          .fillOnly(colors[i % 4])
           .polygon(Polygon.fromCenter(pt, pt.size!, Math.max(3, i % 6)))
       })
     },
