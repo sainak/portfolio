@@ -10,14 +10,26 @@
 
 import { useCallback, useEffect, useRef } from "preact/hooks"
 import { useObserver } from "preact-intersection-observer"
-import { CanvasSpace, Bound, CanvasForm, Group, Create, Pt, Line, Polygon } from "pts"
+import { CanvasSpace, Bound, CanvasForm, Group, Pt, Line, Polygon } from "pts"
 import { getRandomNumber } from "@utils/primitives"
-
+import { Create as DefaultCreate } from "pts"
 interface MyPt extends Pt {
   opacity?: number
   size?: number
 }
 let colors = ["#FF3F8E", "#04C2C9", "#2E55C1", "#FFA400"]
+
+class Create extends DefaultCreate {
+  static distributeRandomRadial(center: Pt, radius: number, count: number): Group {
+    let pts = new Group()
+    for (let i = 0; i < count; i++) {
+      const r = Math.sqrt(Math.random()) * radius
+      const t = Math.random() * Math.PI * 2
+      pts.push(center.$add(Math.cos(t) * r, Math.sin(t) * r))
+    }
+    return pts
+  }
+}
 
 const FloatySpaceCanvas = ({ className = "" }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null)
@@ -56,8 +68,9 @@ const FloatySpaceCanvas = ({ className = "" }) => {
 
   const handleStart = useCallback(
     (bound: Bound, space: CanvasSpace, form: CanvasForm) => {
-      points.current = Create.distributeRandom(
-        space.innerBound,
+      points.current = Create.distributeRandomRadial(
+        space.innerBound.center,
+        space.size.maxValue().value / 2,
         Math.min((window.innerWidth * 0.07) | 0, 150),
       )
       points.current.forEach((pt: MyPt) => {
