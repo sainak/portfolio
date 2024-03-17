@@ -10,7 +10,7 @@
 
 import { useCallback, useEffect, useRef } from "preact/hooks"
 import { useObserver } from "preact-intersection-observer"
-import { CanvasSpace, Bound, CanvasForm, Group, Pt, Line, Polygon } from "pts"
+import { CanvasSpace, Bound, CanvasForm, Group, Pt, Line, Polygon, Geom } from "pts"
 import { getRandomNumber } from "@utils/primitives"
 import { Create as DefaultCreate } from "pts"
 interface MyPt extends Pt {
@@ -92,13 +92,13 @@ const FloatySpaceCanvas = ({ className = "" }) => {
 
   const handleAnimate = useCallback(
     (space: CanvasSpace, form: CanvasForm) => {
-      points.current!.rotate2D(rotateAngle, space.center)
-
+      const pointer = space.pointer
       points.current!.forEach((pt: MyPt, i) => {
-        const lp = perpend(pt)
+        Geom.rotate2D(pt, rotateAngle, space.center)
+        const lp = [pt, perpend(pt)]
 
-        const distLineToMouse = Line.perpendicularFromPt([pt, lp], space.pointer)
-          .$subtract(space.pointer)
+        const distLineToMouse = Line.perpendicularFromPt(lp, pointer)
+          .$subtract(pointer)
           .magnitude()
 
         if (distLineToMouse < triggerDistance && pt.opacity! < ptOpacityMax) {
@@ -107,15 +107,14 @@ const FloatySpaceCanvas = ({ className = "" }) => {
           pt.opacity! -= 0.01
         }
 
-        const distPointToMouse = pt.$subtract(space.pointer).magnitude()
+        const distPointToMouse = pt.$subtract(pointer).magnitude()
         if (distPointToMouse < triggerDistance && pt.size! < ptSizeMax) {
           pt.size! += 0.25
         } else if (pt.size! > ptSize) {
           pt.size! -= 0.1
         }
 
-        form.strokeOnly(`rgb(255 255 255 / ${pt.opacity}`).line([pt, lp])
-        // form.fillOnly(colors[i % 3]).point(pt, pt.size /* pt.size */, "circle")
+        form.strokeOnly(`rgb(255 255 255 / ${pt.opacity}`).line(lp)
         form
           .fillOnly(colors[i % 4])
           .polygon(Polygon.fromCenter(pt, pt.size!, Math.max(3, i % 6)))
@@ -125,24 +124,27 @@ const FloatySpaceCanvas = ({ className = "" }) => {
   )
 
   useEffect(() => {
-    if (!canvasRef || !canvasRef.current) {
+    if (!canvasRef?.current) {
       return
     }
-    spaceRef.current = new CanvasSpace(canvasRef.current).setup({
+    const space = new CanvasSpace(canvasRef.current).setup({
       bgcolor: "#111827",
       resize: true,
       retina: true,
     })
-    let form = spaceRef.current.getForm()
-    spaceRef.current.add({
-      start: (bound: Bound) => handleStart(bound, spaceRef.current!, form),
-      animate: () => handleAnimate(spaceRef.current!, form),
-      resize: () => setBaseLine(spaceRef.current!),
-    })
-    spaceRef.current.bindMouse()
+    let form = space.getForm()
+    space
+      .add({
+        start: (bound: Bound) => handleStart(bound, space, form),
+        animate: () => handleAnimate(space, form),
+        resize: () => setBaseLine(space),
+      })
+      .bindMouse(true)
+      .bindTouch(true, true)
+    spaceRef.current = space
 
     return () => {
-      spaceRef.current && spaceRef.current.dispose()
+      space && space.dispose()
     }
   }, [canvasRef])
 
