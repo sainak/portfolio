@@ -1,12 +1,12 @@
 import type { APIRoute } from "astro"
 
-export const get: APIRoute = async function get() {
+export const GET: APIRoute = () => {
   return fetch("https://sainak.github.io/resume/resume.pdf")
     .then((res) => {
-      if (res.status === 200) {
-        return res
+      if (res.status !== 200) {
+        throw new Error("Not found")
       }
-      return new Response("Not found", { status: 404 })
+      return res
     })
     .catch((err) => {
       console.error(err)
